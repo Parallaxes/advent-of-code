@@ -1,5 +1,5 @@
 /*******************************************************
- * Advent of Code - Day 1: Historian Hysteria - Part 2
+ * Advent of Code 2024 - Day 1: Historian Hysteria - Part 2
  * -----------------------------------------------------
  * Author      : Parallaxes
  * Date        : 12-01-2024
