@@ -34,7 +34,7 @@ fn solve(contents: &str) -> i32 {
             continue;
         }
 
-        let mut flag = if v[0] > v[1] {
+        let flag = if v[0] > v[1] {
             "dec"
         } else if v[0] < v[1] {
             "inc"
@@ -43,15 +43,20 @@ fn solve(contents: &str) -> i32 {
         };
 
         let mut is_safe = true;
+        let mut is_unsafe = 0;
         for i in 1..v.len() {
-            let diff = (v[i] - v[i - 1]).abs();
-            if diff < 1 || diff > 3 {
+            if is_unsafe > 1 {
                 is_safe = false;
                 break;
             }
-            if (flag == "inc" && v[i] <= v[i - 1]) || (flag == "dec" && v[i] >= v[i - 1]) {
-                is_safe = false;
-                break;
+
+            let diff = (v[i] - v[i - 1]).abs();
+            if diff < 1 || diff > 3 {
+                is_unsafe += 1;
+                v.remove(i);
+            } else if (flag == "inc" && v[i] <= v[i - 1]) || (flag == "dec" && v[i] >= v[i - 1]) {
+                is_unsafe += 1;
+                v.remove(i);
             }
         }
 
