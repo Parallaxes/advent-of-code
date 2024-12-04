@@ -1,8 +1,8 @@
 /*******************************************************
- * Advent of Code 2015 - Day 4: The Ideal Stocking Stuffer - Part 1
+ * Advent of Code 2015 - Day 4: The Ideal Stocking Stuffer - Part 2
  * -----------------------------------------------------
  * Author      : Parallaxes
- * Date        : 12-01-2024
+ * Date        : 12-04-2024
  * Description : :3
  * Input File  : input.txt
  * Language    : Rust
@@ -30,7 +30,7 @@ fn solve(contents: &str) -> i32 {
         hasher.update(input);
 
         let result = hasher.finalize();
-        if result[0] == 0 && result[1] == 0 && result[2] < 16 {
+        if result[0] == 0 && result[1] == 0 && result[2] == 0 {
             return i;
         }
 
@@ -39,4 +39,4 @@ fn solve(contents: &str) -> i32 {
 
     i
 }
- 
+  
