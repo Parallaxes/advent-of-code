@@ -19,37 +19,30 @@ fn main() {
 }
 
 fn solve(contents: &str) -> i32 {
-    let mut nice = 0;
-    let vowels = ['a', 'e', 'i', 'o', 'u'];
-    let forbidden_words = ["ab", "cd", "pq", "xy"];
+    let mut cnt = 0;
 
     for line in contents.lines() {
-        let mut vowel_count = 0;
-        let mut double = false;
-        let mut forbidden = false;
+        let repeated_seperated = line
+            .trim()
+            .chars()
+            .zip(line.chars().skip(2))
+            .any(|(a, b)| a == b);
 
-        for (i, c) in line.chars().enumerate() {
-            if vowels.contains(&c) {
-                vowel_count += 1;
-            }
-
-            if i > 0 {
-                let prev = line.chars().nth(i - 1).unwrap();
-                if prev == c {
-                    double = true;
-                }
-
-                let pair = format!("{}{}", prev, c);
-                if forbidden_words.contains(&pair.as_str()) {
-                    forbidden = true;
-                }
-            }
-        }
-
-        if vowel_count >= 3 && double && !forbidden {
-            nice += 1;
+        if two_pairs(line) && repeated_seperated {
+            cnt += 1;
         }
     }
 
-    nice
+    cnt
+}
+
+fn two_pairs(s: &str) -> bool {
+    if s.len() < 4 {
+        return false;
+    }
+
+    let pair = &s[0..2];
+    let remain = &s[2..];
+
+    remain.contains(pair) || two_pairs(&s[1..])
 }
