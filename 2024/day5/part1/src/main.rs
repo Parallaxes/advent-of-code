@@ -62,16 +62,36 @@ fn parse_query(query: &str) -> Vec<i32> {
 
 fn check_order(orders: &HashMap<i32, i32>, query: &Vec<i32>) -> bool {
     for (key, value) in orders {
-        let key_index = query.iter().position(|&x| x == *key);
-        let value_index = query.iter().position(|&x| x == *value);
+        let mut key_indices = vec![];
+        let mut value_indices = vec![];
 
-        println!("Checking order: key = {}, value = {}", key, value);
-        println!("Key index: {:?}, Value index: {:?}", key_index, value_index);
+        for (i, &num) in query.iter().enumerate() {
+            if num == *key {
+                key_indices.push(i);
+            } else if num == *value {
+                value_indices.push(i);
+            }
+        }
 
-        if let (Some(k_idx), Some(v_idx)) = (key_index, value_index) {
-            if k_idx > v_idx {
-                println!("Order check failed: key index {} is greater than value index {}", k_idx, v_idx);
-                return false;
+        println!("Checking order for key: {}, value: {}", key, value);
+        println!("Key indices: {:?}", key_indices);
+        println!("Value indices: {:?}", value_indices);
+
+        for &key_idx in &key_indices {
+            for &value_idx in &value_indices {
+                if key_idx > value_idx {
+                    println!("Order check failed: key index {} is greater than value index {}", key_idx, value_idx);
+                    return false;
+                }
+            }
+        }
+
+        for &value_idx in &value_indices {
+            for &key_idx in &key_indices {
+                if value_idx > key_idx {
+                    println!("Order check failed: value index {} is greater than key index {}", value_idx, key_idx);
+                    return false;
+                }
             }
         }
     }
