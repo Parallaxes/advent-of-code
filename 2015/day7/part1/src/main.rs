@@ -35,7 +35,7 @@ impl FromStr for Command {
     }
 }
 
-fn evaluate<'a>(expression: &'a str, kvs: &mut HashMap<&'a str, i32>) -> Option<i32> {
+fn evaluate<'a>(expression: &'a str, kvs: &mut HashMap<&'a str, u16>) -> Option<u16> {
     let tokens: Vec<&str> = expression.split_whitespace().collect();
     println!("expression: {}", expression);
     println!("tokens: {}", tokens.len());
@@ -44,7 +44,7 @@ fn evaluate<'a>(expression: &'a str, kvs: &mut HashMap<&'a str, i32>) -> Option<
         let left = if let Some(&val) = kvs.get(tokens[0]) {
             val
         } else {
-            tokens[0].parse::<i32>().ok()?
+            tokens[0].parse::<u16>().ok()?
         };
 
         let command = tokens[1].parse::<Command>().ok()?;
@@ -52,7 +52,7 @@ fn evaluate<'a>(expression: &'a str, kvs: &mut HashMap<&'a str, i32>) -> Option<
         let right = if let Some(&val) = kvs.get(tokens[2]) {
             val
         } else {
-            tokens[2].parse::<i32>().ok()?
+            tokens[2].parse::<u16>().ok()?
         };
         let var = tokens[4];
 
@@ -84,12 +84,19 @@ fn evaluate<'a>(expression: &'a str, kvs: &mut HashMap<&'a str, i32>) -> Option<
             },
             _ => None,
         }
-    } else if tokens.len() == 2 && tokens[0] == "NOT" {
-        let num = tokens[1].parse::<i32>().ok()?;
-        kvs 
+    } else if tokens.len() == 4 && tokens[0] == "NOT" {
+        let num = if let Some(&val) = kvs.get(tokens[1]) {
+            val
+        } else {
+            panic!("Could not access nonexistent element")
+        };
+        let var = tokens[3];
+        kvs.insert(var, !num);
+        println!("Taking NOT of {}", num);
+        println!("Inserting {}, {}", var, !num);
         Some(!num)
     } else if tokens.len() == 3 && tokens[1] == "->" {
-        let value = tokens[0].parse::<i32>().ok()?;
+        let value = tokens[0].parse::<u16>().ok()?;
         let var = tokens[2];
         kvs.insert(var, value);
         Some(value)
@@ -99,7 +106,7 @@ fn evaluate<'a>(expression: &'a str, kvs: &mut HashMap<&'a str, i32>) -> Option<
 }
 
 fn solve(contents: &str) {
-    let mut kvs: HashMap<&str, i32> = HashMap::new();
+    let mut kvs: HashMap<&str, u16> = HashMap::new();
 
     for line in contents.lines() {
         let input = line;
